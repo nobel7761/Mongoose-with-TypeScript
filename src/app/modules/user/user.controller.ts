@@ -1,12 +1,58 @@
 import { NextFunction, Request, Response } from "express";
-import { createUserToDB } from "./user.service";
+import {
+  createUserToDB,
+  getAllAdminUsersFromDB,
+  getUserByIDFromDB,
+  getUsersFromDB,
+} from "./user.service";
+
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const users = await getUsersFromDB();
+
+  res.status(200).json({
+    status: "success",
+    data: users,
+  });
+};
+
+export const getUserByID = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const users = await getUserByIDFromDB(id);
+
+  res.status(200).json({
+    status: "success",
+    data: users,
+  });
+};
 
 export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const user = await createUserToDB();
+  const data = req.body;
+  const user = await createUserToDB(data);
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+};
+
+export const getAdminUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = await getAllAdminUsersFromDB();
 
   res.status(200).json({
     status: "success",
